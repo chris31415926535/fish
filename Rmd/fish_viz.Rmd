@@ -1,0 +1,45 @@
+---
+title: "Reef Fish Visualization Test"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+# tell Rmarkdown to print all code
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning = FALSE)
+
+# set RMarkdown directory to be the project root directory, so it finds out data file
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+```
+
+We'll load the data, set up a vector of interesting fish, filter our big dataset to make a subset of interesting fish, and then print the interesting fish.
+
+```{r}
+# load tidyverse, which loads all the packages we'll use at once
+library(tidyverse)
+
+# load the data
+ReefFish <- read_csv("data/HW 3 CRCP_Reef_Fish_Surveys_Hawaii_expanded.csv")
+
+# set up a vector of species of interest
+species_of_interest <- c("Vanderbilt's chromis", "Agile chromis", "Brown surgeonfish", "Spotted surgeonfish", "Yellow tang", "Common bluestripe snapper", "Arc-eye hawkfish", "Hawaiian bicolor chromis", "Whitebar surgeonfish", "Saddle wrasse", "Striated wrasse", "Pebbled butterflyfish")
+
+# create a filtered sub-set of the fish, just species of interest
+fish_filtered <- ReefFish %>%
+  filter(commonname %in% species_of_interest)
+
+# browse the filtered data
+fish_filtered
+```
+
+
+Make a facet-wrapped plot:
+
+```{r}
+# make a facet-wrapped plot of the fish of interest
+fish_filtered %>%
+  ggplot(mapping = aes(y = count, x = depth)) +
+  geom_point() +
+  facet_wrap(~commonname, scales = "free") +
+  geom_smooth()
+```
+
